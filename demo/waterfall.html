@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>canvas</title>
+    <style type="text/css" media="screen">
+    #wp {
+        width: 1200px;
+        min-height: 880px;
+        margin: 0 auto;
+    }
+
+    * {
+        padding: 0;
+        margin: 0
+    }
+
+    /*给大盒子添加样式*/
+    #con {
+        width: 980px;
+        margin: 60px auto;
+        border-radius: 25px;
+        box-shadow: 5px 5px 10px #000;
+        padding: 20px;
+
+        /*下面代码是兼容各个浏览器的，并实现了四列，没两列之间间距为30px，*/
+        column-count: 4;
+        column-gap: 30px;
+        column-rule: 0px solid #ff0000;
+    }
+
+    /*小盒子内容区的样式，display:inline-block：实现 效果*/
+    #con .pic {
+        width: 188px;
+        min-height: 100px;
+        box-shadow: 2px 2px 6px #b5b5b5;
+        padding: 20px 15px;
+        margin: 10px;
+        display: inline-block
+    }
+
+    #con .pic img {
+        width: 100%;
+    }
+
+    .masonry {
+        position: relative;
+        width: 100%;
+        min-height: 880px;
+    }
+
+    .item {
+        position: absolute;
+        padding: 7px;
+        transition: 0.25s;
+        overflow: hidden;
+        z-index: 10;
+    }
+
+    .item img {
+        margin: 5px;
+        width: 90%;
+        height: 100%;
+        border: 1px solid black;
+        border-radius: 14px;
+        transition: 0.25s;
+    }
+
+    .item:hover img {
+        z-index: 100;
+        transition: 0.25s;
+        overflow: hidden;
+        animation: bounceIn 0.25s ease-in 2 alternate;
+    }
+
+    @keyframes bounceIn {
+        100% {
+            transform: scale(1.07);
+        }
+    }
+    </style>
+    <script type="text/javascript" src="./js/vue-2.5.6.min.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+</head>
+
+<body>
+    <div id="wp">
+        <div class="masonry" ref="refUl">
+            <div class="item" v-for="(n,i) in pic">
+                <img class="lazy" :src="n" alt="" />
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+        var vm = new Vue({
+            el: '#wp',
+            data: {
+                pic: ['image/0.gif', 'image/10.png', 'image/3.gif', 'image/5.jpg', 'image/6.jpg', 'image/8.png', 'image/9.png', 'image/0.gif', 'image/10.png', 'image/3.gif', 'image/5.jpg', 'image/6.jpg', 'image/8.png', 'image/9.png', 'image/0.gif', 'image/10.png', 'image/3.gif', 'image/5.jpg', 'image/6.jpg', 'image/8.png', 'image/9.png', 'image/0.gif', 'image/10.png', 'image/3.gif', 'image/5.jpg', 'image/6.jpg', 'image/8.png', 'image/9.png']
+            },
+            created() {
+                //初始化
+                window.onload = () => {
+                    //实现瀑布流
+                    this.waterFall();
+                }
+            },
+            mounted() {
+                // 页面尺寸改变时实时触发
+                window.onresize = () => {
+                    //重新定义瀑布流
+                    this.waterFall();
+                };
+            },
+            methods: {
+                //瀑布流效果
+                waterFall() {
+                    // 1- 确定图片的宽度 - 滚动条宽度
+                    var pageWidth = this.getClient(this.$refs.refUl).width - 8;
+                    var columns = 4; //3列
+                    var itemWidth = parseInt(pageWidth / columns); //得到item的宽度
+                    $(".item").width(itemWidth); //设置到item的宽度
+                    var arr = [];
+                    $(".masonry .item").each(function(i) {
+                        var height = $(this).find("img").height();
+                        var width = $(this).find("img").width();
+                        var bi = itemWidth / width; //获取缩小的比值
+                        var boxheight = parseInt(height * bi); //图片的高度*比值 = item的高度
+                        if (i < columns) {
+                            // 2- 确定第一行
+                            $(this).css({
+                                top: 0,
+                                left: (itemWidth) * i
+                            });
+                            arr.push(boxheight);
+
+                        } else {
+                            // 其他行
+                            // 3- 找到数组中最小高度  和 它的索引
+                            var minHeight = arr[0];
+                            var index = 0;
+                            for (var j = 0; j < arr.length; j++) {
+                                if (minHeight > arr[j]) {
+                                    minHeight = arr[j];
+                                    index = j;
+                                }
+                            }
+                            // 4- 设置下一行的第一个盒子位置
+                            // top值就是最小列的高度
+                            $(this).css({
+                                top: arr[index],
+                                left: $(".masonry .item").eq(index).css("left")
+                            });
+                            // 5- 修改最小列的高度
+                            // 最小列的高度 = 当前自己的高度 + 拼接过来的高度
+                            arr[index] = arr[index] + boxheight + 32;
+                        }
+                    });
+                },
+                //clientWidth 处理兼容性
+                getClient(el) {
+                    return {
+                        width: el.innerWidth || el.clientWidth,
+                        height: el.innerHeight || el.clientHeight
+                    }
+                }
+            }
+        })
+        </script>
+</body>
+
+</html>

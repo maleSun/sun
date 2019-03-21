@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script type="text/javascript" src="js/vue-2.5.6.min.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <style type="text/css" media="screen">
+    * {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    html,
+    body {
+        height: 100%;
+    }
+
+    body {
+        width: 100%;
+    }
+
+    /*将主容器的布局方式设置为相对布局*/
+    #contianer {
+        position: relative;
+    }
+
+    #box {
+        display: flex;
+        align-items: flex-start;
+        width: 1200px;
+        min-height: 800px;
+        margin: 0 auto;
+    }
+
+    #box ul {
+        position: relative;
+        flex: 1;
+    }
+
+    #box ul li {
+        padding: 20px;
+        list-style: none;
+        height: auto;
+    }
+
+    #box ul li img {
+        border: 2px solid black;
+        border-radius: 7px;
+        width: 100%;
+        height: auto;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="box">
+        <ul id="ul1" class="ul1" ref="ulBox0">
+            <li v-for="n in items.item0">
+                <img :src="n" alt="">
+            </li>
+        </ul>
+        <ul id="ul2" class="ul1" ref="ulBox1">
+            <li v-for="n in items.item1">
+                <img :src="n" alt="">
+            </li>
+        </ul>
+        <ul id="ul3" class="ul1" ref="ulBox2">
+            <li v-for="n in items.item2">
+                <img :src="n" alt="">
+            </li>
+        </ul>
+        <ul id="ul4" class="ul1" ref="ulBox3">
+            <li v-for="n in items.item3">
+                <img :src="n" alt="">
+            </li>
+        </ul>
+    </div>
+    <script type="text/javascript">
+    var vm = new Vue({
+        el: '#box',
+        data: {
+            varData: {
+                x: 0, //用于各个列表获取
+                y: 4, //用于获取pic索引，已初始化跳过前4
+                len: 0, //判断数据pic[]是否为最后一项
+            },
+            //模拟数据
+            pic: ['image/8.png', 'image/9.png', 'image/0.gif', 'image/10.png', 'image/9.png', 'image/0.gif', 'image/10.png', 'image/3.gif', 'image/5.jpg', 'image/6.jpg', 'image/10.png', 'image/3.gif', 'image/5.jpg', 'image/6.jpg', 'image/8.png', 'image/9.png', 'image/3.gif', 'image/5.jpg', 'image/6.jpg', 'image/8.png', 'image/0.gif', 'image/10.png', 'image/3.gif', 'image/5.jpg', 'image/6.jpg', 'image/8.png', 'image/9.png', 'image/0.gif'],
+            items: { //列表项
+                item0: [],
+                item1: [],
+                item2: [],
+                item3: []
+            },
+            uls: { //记录ul高度
+                ul0: 0,
+                ul1: 0,
+                ul2: 0,
+                ul3: 0
+            }
+        },
+        created() {
+            //初始化4个ul中的第一个li
+            this.addData();
+        },
+        mounted() {
+            this.getUL();
+            //页面加载后执行瀑布流计算
+            this.waterfall();
+        },
+        methods: {
+            //初始化函数
+            addData() {
+                this.varData.len = this.pic.length;
+                for (let v in this.items) {
+                    var i = v.substr(v.length - 1, 1);
+                    this.items[v] = this.items[v].concat(this.pic[i]);
+                }
+            },
+            //获取ul高度，更新最小高度
+            getUL() {
+                var ulBox = document.getElementsByTagName('ul');
+                for (let v in this.uls) {
+                    var i = v.substr(v.length - 1, 1);
+                    this.uls[v] = ulBox[i].clientHeight;
+                }
+            },
+            waterfall() {
+                //若不为数据最后一项
+                if (this.varData.len - 4 > 0) {
+                    var ulBox = document.getElementsByTagName('ul');
+                    ulLen = ulBox.length;
+                    var minH = Math.min(this.uls['ul0'], this.uls['ul1'], this.uls['ul2'], this.uls['ul3']);
+                    for (var i = 0; i < ulLen; i++) {
+                        if (this.getHeight(ulBox[i]) === minH) {
+                            this.varData.x = i;
+                            break;
+                        }
+                    }
+                    this.items['item' + this.varData.x] = this.items['item' + this.varData.x].concat(this.pic[this.varData.y]);
+                    this.varData.y++;
+                    this.varData.len--;
+                    //若页面更新完毕继续瀑布流计算
+                    this.$nextTick(() => {
+                        this.getUL();
+                        this.waterfall();
+                        console.log(this.uls)
+                    })
+                }
+            },
+            getHeight(el) {
+                return el.clientHeight || el.offsetHeight;
+            }
+        }
+    })
+    </script>
+</body>
+
+</html>

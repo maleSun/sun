@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>鼠标拖拽</title>
+    <style type="text/css" media="screen">
+    .wrapper {
+        position: relative;
+        width: 1000px;
+        height: 600px;
+        border: 2px solid black;
+    }
+
+    .wrapper .area {
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        border-top: 50px solid black;
+        border-left: 50px solid green;
+        border-right: 50px solid blue;
+        border-bottom: 50px solid yellow;
+    }
+
+    .wrapper .load {
+
+        width: 0;
+        height: 0;
+
+        border-radius: 50%;
+        border-left: 50px solid black;
+        border-top: 50px solid green;
+        border-right: 50px solid pink;
+        border-bottom: 50px solid yellow;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="load" style="position: absolute;left:0;top:0;margin-top:500px;"></div>
+    </div>
+    <script type="text/javascript">
+    function getStyle(elem, wl, prop) {
+        if (window.getComputedStyle) {
+            return window.getComputedStyle(elem, wl)[prop];
+        } else {
+            return elem.currentStyle[prop];
+        }
+    }
+    //鼠标拖拽
+    var div = document.getElementsByClassName('load')[0];
+    var disX,
+        disY;
+    div.onmousedown = function(e) {
+        /*设置移动的距离，即鼠标位置-元素style*/
+        disX = e.pageX - parseInt(div.style.left);
+        disY = e.pageY - parseInt(div.style.top);
+        //此处使用document,利用事件冒泡
+        //使元素在鼠标不放开的条件下
+        //由于移动较快鼠标脱离元素内部
+        //使继续随着鼠标移动
+        document.onmousemove = function(e) {
+            //兼容事件源对象
+            var event = e || window.event;
+            div.style.left = event.pageX - disX + "px";
+            div.style.top = event.pageY - disY + "px";
+        }
+        //鼠标松开时不在随着移动
+        div.onmouseup = function() {
+            document.onmousemove = null;
+            var ct = false;
+            function drag() {
+                var top = parseInt(getStyle(div, null, 'top'));
+                if (!ct) {
+                    if (top < 0) {
+                        div.style.top = top + 2 + 'px';
+                    } else {
+                        ct = true;
+                    }
+                } else {
+                    clearTimeout()(timer1);
+                }
+                setTimeout(drag, 10);
+            }
+            drag();
+        }
+
+    }
+    </script>
+</body>
+
+</html>

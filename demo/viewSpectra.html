@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>vue</title>
+    <style type="text/css" media="screen">
+    ul {
+        width: 450px;
+        height: 250px;
+        border-bottom: 3px solid black;
+        display: flex;
+        align-items: flex-end;
+    }
+
+    ul li {
+        width: 50px;
+        height:50px;
+        list-style: none;
+        margin: 0 5px;
+        background-color: #41B02F;
+    }
+    .box{
+        transition:height 2s;
+    }
+    .ct{
+        transition:height .4s;
+    }
+    </style>
+    <script type="text/javascript" src="js/sun-1.0.min.js"></script>
+</head>
+
+<body>
+    <ul>
+        <li id="0" class="box"></li>
+        <li id="1" class="box"></li>
+        <li id="2" class="box"></li>
+        <li id="3" class="box"></li>
+        <li id="4" class="box"></li>
+        <li id="5" class="box"></li>
+        <li id="6" class="box"></li>
+    </ul>
+    <script type="text/javascript">
+    var ul = document.getElementsByTagName('ul')[0];
+    var li = ul.getElementsByTagName('li');
+    EventUtil.addEvent(ul, "mouseover", function(e){
+        var e = EventUtil.getEvent(e);
+        var target = EventUtil.getTarget(e);
+        var id = target.id;
+        if(id != ''){
+            li[id].style.height = 200 + 'px';
+            li[id].className = 'ct';
+        }
+    });
+
+    EventUtil.addEvent(ul, "mouseout", function(e){
+        var e = EventUtil.getEvent(e);
+        var target = EventUtil.getTarget(e);
+        var id = target.id;
+        if(id != ''){
+            li[id].style.height = 50 + 'px';
+            li[id].className = 'box';
+        }
+    });
+    </script>
+</body>
+
+</html>

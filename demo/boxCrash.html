@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>小球碰撞</title>
+    <link rel="stylesheet" href="">
+    <style type="text/css" media="screen">
+    .wrapper {
+        position: relative;
+        width: 1000px;
+        height: 600px;
+        border: 2px solid black;
+    }
+
+    .wrapper .area {
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        border-top: 50px solid black;
+        border-left: 50px solid green;
+        border-right: 50px solid blue;
+        border-bottom: 50px solid yellow;
+    }
+
+    .wrapper .load {
+
+        width: 0;
+        height: 0;
+
+        border-radius: 50%;
+        border-left: 50px solid black;
+        border-top: 50px solid green;
+        border-right: 50px solid pink;
+        border-bottom: 50px solid yellow;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="area"></div>
+    </div>
+    <div class="time"></div>
+    <script type="text/javascript">
+    var area = document.getElementsByClassName('area')[0];
+    var wp = document.getElementsByClassName('wrapper')[0];
+
+    function getStyle(elem, wl, prop) {
+        if (window.getComputedStyle) {
+            return window.getComputedStyle(elem, wl)[prop];
+        } else {
+            return elem.currentStyle[prop];
+        }
+    }
+
+    var wpleft = getStyle(wp, null, 'left');
+    var flag = false;
+    var speed = 2;
+    /*环状碰撞*/
+    function boxCrash() {
+            var aleft = parseInt(getStyle(area, null, 'left'));
+            var atop = parseInt(getStyle(area, null, 'top'));
+            if (!flag) {
+                if (aleft < 900) {
+                    area.style.left = aleft + speed + 'px';
+                    speed += speed / 300;
+                } else {
+                    if (atop < 500) {
+                        area.style.top = atop + speed + 'px';
+                        speed += speed / 300;
+                    }else{
+                        speed = 2;
+                        flag = true;
+                    }
+                }
+            } else {
+                if(aleft > 0){
+                    area.style.left = aleft - speed + 'px';
+                    speed += speed / 300;
+                }else{
+                    if (atop > 0) {
+                        area.style.top = atop - speed + 'px';
+                        speed += speed / 300;
+                    }else{
+                        speed = 2;
+                        flag = false;
+                    }
+                }
+            }
+            setTimeout(boxCrash, 10);
+        }
+        boxCrash();
+    </script>
+</body>
+
+</html>

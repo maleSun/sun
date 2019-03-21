@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>等差数组</title>
+    <style type="text/css">
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    </style>
+</head>
+
+<body>
+    <div>
+        <p></p>
+        <p></p>
+        <p></p>
+        <p></p>
+    </div>
+    <script type="text/javascript">
+    /**
+     * [range2 实现传入1个参数返回，0~num 的等差数组
+     * 传入2个参数返回 num1~num2 的等差数组
+     * 传入3个参数返回 num1~num2之间差值为num3 等差数组]
+     * @return {[type]} [description]
+     */
+    function arithArr() {
+        var argLen = arguments.length;
+        var arr = [];
+        var start = ((argLen > 1) ? arguments[0] : 0);
+        var cd = ((argLen > 1) ? arguments[1] : arguments[0]);
+        var loop = ((argLen < 3) ? 1 : arguments[2]);
+        for (var i = start; i < cd; i += loop) {
+            arr.push(i);
+        }
+        return arr;
+    }
+    var p = document.getElementsByTagName('p');
+    p[0].innerHTML = "arithArr(1, 11)    --> " + "[" + arithArr(1, 11) + "]";
+    p[1].innerHTML = "arithArr(10)       -->" + "[" + arithArr(10) + "]";
+    p[2].innerHTML = "arithArr(0, 30, 5) --> " + "[" + arithArr(0, 30, 5) + "]";
+    p[3].innerHTML = "arithArr(0)        --> " + "[" + arithArr(0) + "]";
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>金额中文大写</title>
+    <link rel="stylesheet" href="">
+    <style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .wrapper {
+        width: 500px;
+        height: 50px;
+        margin: 200px auto;
+    }
+    .wrapper .t{
+        width:400px;
+        height:50px;
+        padding-left:15px;
+        border:3px solid black;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+        outline:none;
+        font-family: "Consolas";
+        font-size:18px;
+    }
+    .wrapper .btn{
+        width:60px;
+        height:50px;
+        border:0.8px solid #1C20F1;
+        background-color: #efefef;
+        font-family: "Simhei";
+        font-size:18px;
+    }
+    .wrapper .tip {
+        width:460px;
+        height: 50px;
+        margin:0 auto;
+        line-height: 50px;
+        font-size: 18px;
+        color: #3239EB;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <input type="text" class="t">
+        <input type="button" value="转换" class="btn" onclick="caption();">
+        <div class="tip"></div>
+    </div>
+    <script type="text/javascript">
+    var input = document.getElementsByTagName('input');
+    var tip = document.getElementsByClassName('tip')[0];
+    var arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
+    /*判断是否在数组中*/
+    Array.prototype.isInArr = function(e) {
+        for (var i = 0; i < this.length; i++) {
+            if (e == this[i]) {
+                console.log("arr = " + this[i]);
+                console.log("e = " + e);
+                return true;
+            }
+        }
+        return false;
+    }
+    /*数字大写*/
+    function transfer(target) {
+        switch (target) {
+            case 1:
+                return "壹";
+            case 2:
+                return "贰";
+                san
+            case 3:
+                return "叁";
+            case 4:
+                return "肆";
+            case 5:
+                return "伍";
+            case 6:
+                return "陆";
+            case 7:
+                return "柒";
+            case 8:
+                return "捌";
+            case 9:
+                return "玖";
+            case 0:
+                return "零";
+        }
+    }
+
+    /*单位换算小数之前 每4位为一组换算， 递归*/
+    function unitb(num1) {
+        var len = num1.length;
+        var rs = "";
+        if (0 < len && len <= 4) {
+            /*千级*/
+            console.log("come th");
+            var n1 = num1 % 10;
+            var n2 = parseInt(num1 / 10) % 10;
+            var n3 = parseInt(num1 / 100) % 10;
+            var n4 = parseInt(num1 / 1000) % 10;
+            var tf;
+            if (n4 != 0) {
+                tf = transfer(n4) + "仟" + transfer(n3) + "佰" + transfer(n2) + "拾" + transfer(n1);
+            } else if (n3 != 0) {
+                tf = transfer(n3) + "佰" + transfer(n2) + "拾" + transfer(n1);
+            } else if (n2 != 0) {
+                tf = transfer(n2) + "拾" + transfer(n1);
+            } else if (n1 != 0) {
+                tf = transfer(n1);
+            }
+            rs = cutZero(rs, tf);
+        } else if (len > 4 && len <= 8) {
+            /*万级*/
+            var w1 = num1.substr(0, len - 4);
+            var t1 = num1.substr(len - 4, 4);
+            rs = unitb(w1) + "万 " + unitb(t1);
+        } else if (len > 8) {
+            /*亿级*/
+            var y1 = num1.substr(0, len - 8);
+            var w1 = num1.substr(len - 8, len - 3);
+            rs = unitb(y1) + "亿 " + unitb(w1);
+        }
+        return rs;
+    }
+
+    /*去除0位，例如5007 读作伍仟零柒*/
+    function cutZero(rs, tf) {
+        if (tf.indexOf("零佰零拾零") > 0) {
+            console.log(1);
+            rs = tf.replace('零佰零拾零', "");
+        } else if (tf.indexOf("零佰零拾") > 0) {
+            console.log(2);
+            rs = tf.replace(new RegExp("零佰零拾", 'g'), "零");
+        } else if (tf.indexOf("零拾零") > 0) {
+            console.log(3);
+            rs = tf.replace(new RegExp("零拾零", 'g'), "");
+        } else if (tf.indexOf("零佰") > 0) {
+            console.log(4);
+            rs = tf.replace(new RegExp("零佰", 'g'), "零");
+            console.log(rs);
+            if (rs.indexOf("拾零") > 0) {
+                console.log(6);
+                rs = rs.replace(new RegExp("拾零", 'g'), "拾");
+            }
+        } else if (tf.indexOf("零拾") > 0) {
+            console.log(5);
+            rs = tf.replace(new RegExp("零拾", 'g'), "零");
+        } else if (tf.indexOf("拾零") > 0) {
+            console.log(6);
+            rs = tf.replace(new RegExp("拾零", 'g'), "拾");
+        } else {
+            rs = tf;
+        }
+        return rs;
+    }
+    /*单位换算小数之后 4种情况*/
+    function unitl(num2) {
+        var f = num2 % 10;
+        var t = parseInt(num2 / 10) % 10;
+        var rs = "";
+        if (t == 0) {
+            if (f == 0) {
+                rs = "整";
+            } else {
+                rs = "零角" + transfer(f) + "分";
+            }
+        } else {
+            if (f == 0) {
+                rs = transfer(t) + "角零分";
+            } else {
+                rs = transfer(t) + "角" + transfer(f) + "分";
+            }
+        }
+        return rs;
+    }
+    /*开始换算为中文大写*/
+    function caption() {
+        var txt = input[0].value;
+        var tlen = txt.length;
+        var narr = new Array();
+        for (var j = 0; j < tlen; j++) {
+            if (arr.indexOf(txt[j]) == -1) {
+                tip.innerHTML = '请输入数字或小数形式';
+            } else if (txt[0] == 0) {
+                tip.innerHTML = '首位不能为0';
+            } else {
+                narr = txt.split(".");
+            }
+        }
+        var num1 = narr[0];
+        var num2 = narr[1];
+        if (num1.length > 12) {
+            tip.innerHTML = '金额过大';
+        } else if (typeof(num2) != 'string') {
+            tip.innerHTML = '请输入两位小数';
+        } else if (String(num2).length > 2) {
+            tip.innerHTML = '小数不能超过两位';
+        } else {
+            tip.innerHTML = unitb(num1) + "元 " + unitl(num2);
+        }
+        console.log("num1 = " + num1);
+        console.log("num2 = " + num2);
+    }
+    </script>
+</body>
+
+</html>

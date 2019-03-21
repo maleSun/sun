@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>生成n个随机数</title>
+
+</head>
+
+<body>
+    <script type="text/javascript">
+    /*生成随机数
+        @range   随机数范围
+        @bit     随机数个数
+    */
+    function rannum(range, bit) {
+        var randoms = [];
+        while (true) {
+            var flag = false;
+            var len = randoms.length;
+            var random = parseInt(1 + range * Math.random());
+            for (var i = 0; i < len; i++) {
+                if (randoms[i] === random) {
+                    flag = true;
+                    break;
+                }
+            }
+            if (len === bit) {
+                break;
+            }
+            if (!flag) {
+                randoms.push(random);
+            }
+        }
+        return randoms;
+    }
+    var randoms = rannum(100, 10);
+    document.write(randoms);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>canvas验证码</title>
+    <link rel="stylesheet" href="">
+    <style type="text/css" media="screen">
+    .cav {
+        border: 1px solid #141414;
+    }
+    </style>
+</head>
+
+<body>
+    <canvas class="cav" width="150" height="100" onclick="verif();">
+    </canvas>
+    <div class="wrapper">
+        <input type="text" class="t" onchange="var dec = exc(this.value);dec;if(dec){console.log(1);}">
+        <div class="tip"></div>
+    </div>
+    <script type="text/javascript">
+    var rch = [];
+
+    function verif() {
+        var cav = document.getElementsByClassName('cav')[0];
+        /*创建context对象*/
+        var ctx = cav.getContext("2d");
+        /*每次刷新之前清空画布*/
+        ctx.clearRect(0, 0, cav.width, cav.height);
+        /*创建二次贝塞尔曲线*/
+        ctx.beginPath();
+        ctx.moveTo(20, 20);
+        ctx.quadraticCurveTo(60, 60, 140, 20);
+        ctx.stroke();
+        /*创建直线*/
+        function wline(ctx, x0, y0, x1, y1) {
+            ctx.moveTo(x0, y0);
+            ctx.lineTo(x1, y1);
+            ctx.stroke();
+        }
+        wline(ctx, 130, 30, 30, 96);
+        /*创建三次贝塞尔曲线*/
+        ctx.moveTo(20, 80);
+        ctx.bezierCurveTo(20, 55, 120, 55, 120, 80);
+        ctx.stroke();
+
+        /*生成随机数*/
+        var randoms = [];
+        var random1 = [];
+        /*生成随机
+            @randoms 随机数数组
+            @range   随机数范围
+            @bit     随机数个数
+        */
+        function rannum(randoms, range, bit) {
+            while (true) {
+                var flag = false;
+                var len = randoms.length;
+                var random = parseInt(1 + range * Math.random());
+                for (var i = 0; i < len; i++) {
+                    if (randoms[i] === random) {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (len === bit) {
+                    break;
+                }
+                if (!flag) {
+                    randoms.push(random);
+                }
+            }
+        }
+        rannum(randoms, 200, 150);
+        /*生成盐点*/
+        var len = randoms.length;
+        for (var i = 0; i < len; i++) {
+            wline(ctx, randoms[i], randoms[i + 5], randoms[i] + 1.5, randoms[i + 5]);
+        }
+        /*创建文字数组*/
+        var arrCH = ["抛", "投", "坟", "抗", "坑", "坊", "抖", "护", "壳", "志", "扭", "块", "声", "把", "报", "却", "劫", "芽", "花", "芹", "芬", "苍", "芳", "严", "芦", "劳", "克", "苏", "杆", "杠", "杜", "材", "村", "杏", "极", "李", "杨", "求", "更", "束", "豆", "两", "丽", "医", "辰", "励", "否", "还", "歼", "来", "连", "步", "坚", "旱", "呈", "时", "吴", "助", "里", "呆", "园", "旷", "围", "吨", "足", "邮", "男", "困", "吵", "串", "员", "听", "吹", "呜", "吧", "吼", "别", "岗", "帐", "财", "针", "钉", "告", "我", "乱", "利", "秃", "秀", "私", "每", "兵", "估", "体", "何", "但", "伸", "作", "伯", "佣", "低", "启"];
+        /*创建文本*/
+        function txtCH(ctx) {
+            rannum(random1, 100, 4);
+            ctx.font = "20px Arial";
+            ctx.fillText(arrCH[random1[0]], 15, 66);
+            ctx.strokeText(arrCH[random1[1]], 35, 34);
+            ctx.fillText(arrCH[random1[2]], 75, 58);
+            ctx.strokeText(arrCH[random1[3]], 115, 90);
+        }
+        txtCH(ctx);
+        rch = [];
+        rch.push(arrCH[random1[0]]);
+        rch.push(arrCH[random1[1]]);
+        rch.push(arrCH[random1[2]]);
+        rch.push(arrCH[random1[3]]);
+
+    }
+    var demo = verif;
+    demo();
+    var t = document.getElementsByClassName('t')[0];
+    var tip = document.getElementsByClassName('tip')[0];
+
+    /*验证输入是否正确*/
+    function exc(val) {
+        var len = rch.length;
+        var str = "";
+        var flag = false;
+        for (var i = 0; i < len; i++) {
+            str += rch[i];
+        }
+        if(val == str){
+            tip.innerHTML = "验证码正确";
+            flag = true;
+            return flag;
+        }else{
+            tip.innerHTML = "验证码错误";
+            return flag;
+        }
+    }
+    </script>
+</body>
+
+</html>

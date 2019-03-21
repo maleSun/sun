@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <style type="text/css">
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    ul {
+        width: 400px;
+    }
+
+    ul,
+    li {
+        list-style: none;
+    }
+
+    img {
+        width: 100%;
+        height: 160px;
+        /* 以下样式是为了做渐变效果 */
+        opacity: 0;
+        transition: opacity 2s;
+    }
+
+    img[src] {
+        opacity: 1;
+    }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li><img data-src="image/1.gif" alt=""></li>
+        <li><img data-src="image/2.gif" alt=""></li>
+        <li><img data-src="image/2.gif" alt=""></li>
+        <li><img data-src="image/2.gif" alt=""></li>
+        <li><img data-src="image/0.gif" alt=""></li>
+        <li><img data-src="image/0.gif" alt=""></li>
+        <li><img data-src="image/0.gif" alt=""></li>
+        <li><img data-src="image/0.gif" alt=""></li>
+        <li><img data-src="image/0.gif" alt=""></li>
+        <li><img data-src="image/3.gif" alt=""></li>
+        <li><img data-src="image/3.gif" alt=""></li>
+        <li><img data-src="image/3.gif" alt=""></li>
+        <li><img data-src="image/3.gif" alt=""></li>
+        <li><img data-src="image/3.gif" alt=""></li>
+        <li><img data-src="image/3.gif" alt=""></li>
+        <li><img data-src="image/3.gif" alt=""></li>
+        <li><img data-src="image/3.gif" alt=""></li>
+        <li><img data-src="image/3.gif" alt=""></li>
+        <li><img data-src="image/4.jpg" alt=""></li>
+        <li><img data-src="image/5.jpg" alt=""></li>
+        <li><img data-src="image/5.jpg" alt=""></li>
+        <li><img data-src="image/5.jpg" alt=""></li>
+        <li><img data-src="image/5.jpg" alt=""></li>
+        <li><img data-src="image/5.jpg" alt=""></li>
+        <li><img data-src="image/4.jpg" alt=""></li>
+        <li><img data-src="image/4.jpg" alt=""></li>
+        <li><img data-src="image/4.jpg" alt=""></li>
+        <li><img data-src="image/1.gif" alt=""></li>
+        <li><img data-src="image/1.gif" alt=""></li>
+        <li><img data-src="image/1.gif" alt=""></li>
+    </ul>
+    <script type="text/javascript">
+    var scrollTop = window.scrollY;
+    var imgs = Array.from(document.querySelectorAll('img'));
+
+    lazyLoad();
+
+    window.onscroll = function() {
+        scrollTop = window.scrollY;
+        lazyLoad(); 
+    }
+    function lazyLoad(){
+        imgs.forEach((item,index)=>{
+            if( item.offsetTop < window.innerHeight + scrollTop ){
+                item.setAttribute('src',item.dataset.src)
+            }
+        })
+    }
+    </script>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>模块点击高亮</title>
+    <style type="text/css">
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    div{
+        width:200px;
+    }
+
+    li {
+        display: block;
+        width: 200px;
+        height: 30px;
+        margin: 10px auto;
+        text-align: center;
+        font-size: 20px;
+    }
+
+    li:first-child {
+        background-color: #4fc08d;
+    }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li>A1</li>
+        <li>B2</li>
+        <li>C3</li>
+        <li>D4</li>
+    </ul>
+    <script type="text/javascript" src="js/sun-1.0.min.js"></script>
+    <script type="text/javascript">
+    /*方法1:立即执行函数*/
+    /*EventUtil.addEvent(window, "load", function() {
+        var item = document.getElementsByTagName('li');
+        var len = item.length;
+        var flag = 0;
+        for (var i = 0; i < len; i++) {
+            (function(i) {
+                EventUtil.addEvent(item[i], "click", function() {
+                    item[flag].style.backgroundColor = 'transparent';
+                    this.style.backgroundColor = '#83BE1F';
+                    flag = i;
+                });
+            }(i));
+        }
+    });*/
+    /*方法2：事件委托*/
+    var ul = document.getElementsByTagName('ul')[0];
+    var item = document.getElementsByTagName('li');
+    var len = item.length;
+    for (var i = 0; i < len; i++) {
+        item[i].id = i;
+    }
+    var flag = 0;
+    EventUtil.addEvent(document, "click", function(e) {
+        var e = EventUtil.getEvent();
+        var target = EventUtil.getTarget(e);
+        console.log(target);
+        if (target.tagName == 'LI') {
+            var id = target.id;
+            item[flag].style.backgroundColor = 'transparent';
+            item[id].style.backgroundColor = '#4fc08d';
+            flag = id;
+        }
+    });
+    </script>
+</body>
+
+</html>

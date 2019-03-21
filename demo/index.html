@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>猩猩打方块</title>
+    <style type="text/css" media="screen">
+    * {
+        margin: 0;
+        padding: 0
+    }
+
+    body {
+        width: 1400px;
+        min-width: 800px
+    }
+
+    .lump {
+        position: absolute;
+        top: 5%;
+        left: 30%;
+        width: 670px;
+        height: 670px;
+        margin-left: 100px
+    }
+
+    .lump .content {
+        display: block;
+        width: 80px;
+        height: 80px;
+        float: left;
+        list-style: none;
+        border: 1px solid #234535;
+        text-align: center;
+        line-height: 100px;
+        font-size: 30px
+    }
+
+    .time {
+        position: absolute;
+        top: 30%;
+        left: 10%;
+        width: 200px;
+        font-size: 20px
+    }
+
+    .btn {
+        display: inline-block;
+        border: none;
+        outline: 0;
+        margin: 30px auto;
+        border-radius: 8px;
+        background-color: #FA9347;
+        width: 200px;
+        text-align: center;
+        font-size: 25px;
+        color: #fff;
+        font-weight: 600;
+        transition: all .5s;
+        box-shadow: 0 10px #CABFBF
+    }
+
+    .btn span {
+        position: relative;
+        display: inline-block;
+        height: 50px;
+        line-height: 50px;
+        transition: .5s
+    }
+
+    .btn span::after {
+        content: "»";
+        position: absolute;
+        right: -30px;
+        opacity: 0;
+        font-size: 25px;
+        transition: .5s
+    }
+
+    .btn:hover span {
+        padding-right: 25px
+    }
+
+    .btn:hover span::after {
+        right: 0;
+        opacity: 1
+    }
+
+    .btn:active {
+        box-shadow: 0 5px #8F8181;
+        transform: translateY(5px)
+    }
+    </style>
+    <script type="text/javascript" src="js/vue-2.5.6.min.js"></script>
+</head>
+
+<body>
+    <div class="time">
+        <button class="btn"><span>开始游戏</span></button><button class="btn"><span>重新游戏</span></button><span>您的用时 :</span><span class="t1">0</span><span>s</span>
+    </div>
+    <ul class="lump" id="mk">
+        <li v-for="n in 64" class="content" v-bind:id="n-1"></li>
+    </ul>
+    <script type="text/javascript" src="js/sun-1.0.min.js"></script>
+    <script type="text/javascript">
+        var vm = new Vue({
+            el:'#mk',
+            data:{
+
+            },
+            computed:{
+
+            },
+            watch:{
+
+            },
+            methods:{
+
+            }
+        })
+    function play() {
+        var lump = document.getElementsByClassName('lump')[0];
+        var ct = document.getElementsByClassName('content');
+        var t1 = document.getElementsByClassName('t1')[0];
+        var time = false;
+        var randoms = new Array();
+        while (true) { var flag = false; var rLen = randoms.length; var random = parseInt(63 * Math.random()); for (var i = 0; i < rLen; i++) { if (random === randoms[i]) { flag = true; break; } } if (rLen == 10) { break; } if (!flag) { randoms.push(random); } }
+        var rLen1 = randoms.length;
+        var ctLen = ct.length;
+        for (var i = 0; i < rLen1; i++) { ct[randoms[i]].innerHTML = (i + 1); } setTimeout(function() {
+            for (var i = 0; i < rLen1; i++) {
+                ct[randoms[i]].style.backgroundColor = "#ff0000";
+                ct[randoms[i]].innerHTML = '';
+            }
+            var timer = setInterval(function() { if (time == false) { t1.innerHTML++; } else { clearInterval(timer); } }, 1000);
+        }, 2000);
+
+        function clearC(elem) {
+            elem.style.backgroundColor = "#ffffff";
+            elem.innerHTML = '';
+        }
+
+        function indexArr(arr, val) { var len = arr.length; for (var i = 0; i < len; i++) { if (arr[i] == val) { return i; } } }
+        var last = 0;
+        EventUtil.addEvent(lump, "click", function(event) {
+            event = EventUtil.getEvent(event);
+            var target = EventUtil.getTarget(event);
+            var id = target.id;
+            for (var j = 0; j < rLen; j++) {
+                if (id == randoms[j]) {
+                    if (j === last) {
+                        last++;
+                        if (j === 9) {
+                            time = true;
+                            alert("您的用时 ： " + t1.innerText);
+                            history.go(0);
+                        }
+                        clearC(ct[id]);
+                    } else { alert("请点击上一个数"); }
+                }
+            }
+        });
+    }
+    var btn = document.getElementsByClassName('btn');
+    var flag = true;
+    EventUtil.addEvent(btn[0], 'click', function() {
+        if (flag) {
+            play();
+            flag = false;
+        } else { EventUtil.removeEvent(btn[0], 'click', play); }
+    });
+    EventUtil.addEvent(btn[1], 'click', function() { history.go(0); });
+    
+    </script>
+</body>
+
+</html>
