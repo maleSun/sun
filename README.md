@@ -1,5 +1,4 @@
 # sun
-## [伪淘宝首屏](https://malesun.github.io/sun/taobao)
 ## [小游戏](https://malesun.github.io/sun/demo/)
 ## [动态布局](https://malesun.github.io/sun/demo/layoutAuto.html)
 ## [跑马灯](https://malesun.github.io/sun/demo/viewpager.html)
